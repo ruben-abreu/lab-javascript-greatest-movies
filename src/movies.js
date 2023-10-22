@@ -128,18 +128,31 @@ function turnHoursToMinutes(movies) {
 }
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-
-/* which year has the best average score.
-Find which year has the best average score
-for the movies released that year! 
-Create bestYearAvg() function that receives an array of movies 
-and gives us an answer to which year was the best year for cinema 
-and what was its average score. 
-The bestYearAvg() should return a string with the following structure:
-The best year was <YEAR> with an average score of <RATE> */
-
 function bestYearAvg(moviesArray) {
-  if (moviesArray.length == 0) {
+  if (moviesArray.length === 0) {
     return null;
   }
+
+  const yearData = moviesArray.reduce((data, movie) => {
+    if (movie.year && movie.score) {
+      data[movie.year] = data[movie.year] || { totalScore: 0, count: 0 };
+      data[movie.year].totalScore += movie.score;
+      data[movie.year].count++;
+      return data;
+    }
+    return data;
+  }, {});
+
+  let bestYear = null;
+  let bestAverage = 0;
+
+  for (const year in yearData) {
+    const average = yearData[year].totalScore / yearData[year].count;
+    if (average > bestAverage || (average === bestAverage && year < bestYear)) {
+      bestYear = year;
+      bestAverage = average;
+    }
+  }
+
+  return `The best year was ${bestYear} with an average score of ${bestAverage}`;
 }
